@@ -46,7 +46,7 @@ void loop() {
   // float f = dht.readTemperature(true);
   // Assign pin for data sensing
   int AnalogValue = analogRead(A0);
-  float Brightness = (100.0 - (AnalogValue * (100.0 / 900.0)));
+  float Brightness = (100.0 - (AnalogValue * (100.0 / 900.0))); // 900 is highest value displayed with brightest light (mobile flash at sensor head)
   // Check if any reads failed and exit early (to try again).
   if (isnan(h) || isnan(t)) {
     Serial.println(F("Failed to read from DHT sensor!"));
@@ -57,20 +57,17 @@ void loop() {
   // Compute heat index in Celsius (isFahreheit = false)
   //  float hic = dht.computeHeatIndex(t, h, false);
 
-  Serial.print(F("Humidity: "));
+  //Serial.print(F("Humidity: "));
   Serial.print(h);
-  Serial.print(F("%  Temperature: "));
+  Serial.print(",");
+  //Serial.print(F("%  Temperature: "));
   Serial.print(t);
-  Serial.print(F("°C "));
-  Serial.print(F("  Brightness: "));
-  Serial.print(Brightness);
-  Serial.println(F("%"));
-  //  Serial.print(f);
-  //  Serial.print(F("°F  Heat index: "));
-  //  Serial.print(hic);
-  //  Serial.print(F("°C "));
-  //  Serial.print(hif);
-  //  Serial.println(F("°F"));
+  //Serial.print(F("°C "));
+  //Serial.print(F("  Brightness: "));
+  Serial.print(",");
+  Serial.println(Brightness);
 
+
+ 
   delay(2000);
 }
