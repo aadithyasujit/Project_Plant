@@ -37,19 +37,20 @@ void loop()
 
   //---------------------- LDR LML939 light sensor -----------------
   // Assign pin for data sensing
-  int AnalogValue = analogRead(A0);
-  float Brightness = (100.0 - (AnalogValue * (100.0 / 900.0))); // 900 is highest value displayed with brightest light (mobile flash at sensor head)
+  int LDRAnalogValue = analogRead(A0);
+  float Brightness = (100.0 - (LDRAnalogValue * (100.0 / 900.0))); // 900 is highest value displayed with brightest light (mobile flash at sensor head)
 
-  //---------------------- LDR LML939 light sensor -----------------
+  //---------------------- Soil moisture sensor -----------------
 
-  // add other sensors
+  int SMAnalogValue = analogRead(A1);
+  float SMP = (100.0 - (SMAnalogValue*(100.0/900.0))); // AnaLog sensing , 900 was dry pad and 0 was wet pad resistance, Hence percentage calculated! 
 
   //---------------------- Heat index computation if needed -----------------
 
   // Compute heat index in Fahrenheit (the default)
   // float hif = dht.computeHeatIndex(f, h);
   // Compute heat index in Celsius (isFahreheit = false)
-  //  float hic = dht.computeHeatIndex(t, h, false);
+  // float hic = dht.computeHeatIndex(t, h, false);
 
   //---------------------- Failed to read from sensor  -----------------
 
@@ -67,7 +68,10 @@ void loop()
   //Serial.print(F("°C "));
   //Serial.print(F("  Brightness: "));
   Serial.print(",");
-  Serial.println(Brightness);
+  Serial.print(Brightness);
+  //Serial.println(SMAnalogValue);
+  Serial.print(",");
+  Serial.println(SMP);
 
 
 
