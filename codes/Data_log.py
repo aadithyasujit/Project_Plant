@@ -13,9 +13,9 @@ while 1 :
  
     prodata=incomdata.decode()  # converting byte to string for data cleaup (#Python3 problems)
     prodata=prodata[:-2]  # Removing the 2 random shit char found after decode.
-#    print(prodata)
+#   print(prodata)
     
-    Humidity,Temperature,Brightness = prodata.split(',') # spliting data with "," delimited
+    Humidity,Temperature,Brightness,SoilM = prodata.split(',') # spliting data with "," delimited
     
-    print("Humidity:", Humidity ,"%", "Temperature:", Temperature ,"C", "Brightness:", Brightness ,"%")
-    
+    print("Humidity:", Humidity ,"%", "Temperature:", Temperature ,"C", "Brightness:", Brightness ,"%","Soil Moisture:", SoilM ,"%")
+# Confirmation sake!!
