@@ -38,17 +38,8 @@ import sys
 import time
 import datetime
 
-import Adafruit_DHT
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-
-# Type of sensor, can be Adafruit_DHT.DHT11, Adafruit_DHT.DHT22, or Adafruit_DHT.AM2302.
-DHT_TYPE = Adafruit_DHT.DHT22
-
-# Example of sensor connected to Raspberry Pi pin 23
-DHT_PIN  = 23
-# Example of sensor connected to Beaglebone Black pin P8_11
-#DHT_PIN  = 'P8_11'
 
 # Google Docs OAuth credential JSON file.  Note that the process for authenticating
 # with Google docs has changed as of ~April 2015.  You _must_ use OAuth2 to log
@@ -101,19 +92,16 @@ while True:
     if worksheet is None:
         worksheet = login_open_sheet(GDOCS_OAUTH_JSON, GDOCS_SPREADSHEET_NAME)
 
-    # Attempt to get sensor reading.
-#    humidity, temp = Adafruit_DHT.read(DHT_TYPE, DHT_PIN)
-
-    # Skip to the next reading if a valid measurement couldn't be taken.
-    # This might happen if the CPU is under a lot of load and the sensor
-    # can't be reliably read (timing is critical to read the sensor).
-#    if humidity is None or temp is None:
+     # Skip to the next reading if a valid measurement couldn't be taken.
+     # This might happen if the CPU is under a lot of load and the sensor
+     # can't be reliably read (timing is critical to read the sensor).
+# implement data reading here
+#    
+#   if humidity is None or temp is None:
 #        time.sleep(2)
-#        continue
-    temp = 10;
-    humidity = 20;
-    print('Temperature: {0:0.2f} C'.format(temp))
-    print('Humidity:    {0:0.2f} %'.format(humidity))
+    
+    print('Temperature: {0:0.2f} C'.format(Temperature))
+    print('Humidity:    {0:0.2f} %'.format(Humidity))
     date_str = json.dumps(datetime.datetime.now().strftime("%Y-%m-%d"))
     time_str = json.dumps(datetime.datetime.now().strftime("%H:%M:%S"))
     print(date_str)
@@ -121,8 +109,8 @@ while True:
     # Append the data in the spreadsheet, including a timestamp
     try:
 #    worksheet.append_row((datetime.datetime.now(), temp, humidity))
-#        worksheet.append_row((temp, humidity))
-#        worksheet.append_row((date_str, time_str, temp, humidity))
+#    worksheet.append_row((temp, humidity))
+        worksheet.append_row((date_str, time_str, temp, humidity))
 
     except:
         # Error appending data, most likely because credentials are stale.
