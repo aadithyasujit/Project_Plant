@@ -69,19 +69,20 @@ DHT_PIN  = 23
 # Then use the File -> Share... command in the spreadsheet to share it with read
 # and write acess to the email address above.  If you don't do this step then the
 # updates to the sheet will fail!
-GDOCS_OAUTH_JSON       = 'your SpreadsheetData-*.json file name'
+GDOCS_OAUTH_JSON       = 'ProjectPlant-f697b8eaf2b9.json'
 
 # Google Docs spreadsheet name.
-GDOCS_SPREADSHEET_NAME = 'your google docs spreadsheet name'
+GDOCS_SPREADSHEET_NAME = 'projectplant'
 
 # How long to wait (in seconds) between measurements.
-FREQUENCY_SECONDS      = 30
+FREQUENCY_SECONDS      = 10
 
 
 def login_open_sheet(oauth_key_file, spreadsheet):
     """Connect to Google Docs spreadsheet and return the first worksheet."""
     try:
-        scope =  ['https://spreadsheets.google.com/feeds']
+        scope =  ['https://spreadsheets.google.com/feeds',
+'https://www.googleapis.com/auth/drive']
         credentials = ServiceAccountCredentials.from_json_keyfile_name(oauth_key_file, scope)
         gc = gspread.authorize(credentials)
         worksheet = gc.open(spreadsheet).sheet1
@@ -101,21 +102,28 @@ while True:
         worksheet = login_open_sheet(GDOCS_OAUTH_JSON, GDOCS_SPREADSHEET_NAME)
 
     # Attempt to get sensor reading.
-    humidity, temp = Adafruit_DHT.read(DHT_TYPE, DHT_PIN)
+#    humidity, temp = Adafruit_DHT.read(DHT_TYPE, DHT_PIN)
 
     # Skip to the next reading if a valid measurement couldn't be taken.
     # This might happen if the CPU is under a lot of load and the sensor
     # can't be reliably read (timing is critical to read the sensor).
-    if humidity is None or temp is None:
-        time.sleep(2)
-        continue
-
-    print('Temperature: {0:0.1f} C'.format(temp))
-    print('Humidity:    {0:0.1f} %'.format(humidity))
-
+#    if humidity is None or temp is None:
+#        time.sleep(2)
+#        continue
+    temp = 10;
+    humidity = 20;
+    print('Temperature: {0:0.2f} C'.format(temp))
+    print('Humidity:    {0:0.2f} %'.format(humidity))
+    date_str = json.dumps(datetime.datetime.now().strftime("%Y-%m-%d"))
+    time_str = json.dumps(datetime.datetime.now().strftime("%H:%M:%S"))
+    print(date_str)
+    print(time_str)
     # Append the data in the spreadsheet, including a timestamp
     try:
-        worksheet.append_row((datetime.datetime.now(), temp, humidity))
+#    worksheet.append_row((datetime.datetime.now(), temp, humidity))
+#        worksheet.append_row((temp, humidity))
+#        worksheet.append_row((date_str, time_str, temp, humidity))
+
     except:
         # Error appending data, most likely because credentials are stale.
         # Null out the worksheet so a login is performed at the top of the loop.
