@@ -6,23 +6,31 @@ to join the main garden.
 
 I have decided try my hands on a very basic garden monitering and feedback system. But have included stages for as far and fancy as I could envision.    
 
-  Stage 1
-  - Learn about sensors and read out values of the plant environment.
-  - Process and send out data to web/app based program for remote monitoring. 
-  - Build a informative GUI and may be add some plant status alerts or notification.
+Sensor Systems classification :: 
+
+  - Build a system to sense ambient conditions such as light , humidity and temperature. This can also act as a local wheather station. 
+  - Build ground sensor system to measure temperature and moisture of soil. 
+  - Integrate 3 other light sensors - ambient around plant, 3 light sensors on the ground bed(avg value). 
+  - Raspberry Pi camera for sensing plant changes. 
   
-  Stage 2
-  - Develop a response system that can take action to the alerts (water,light,moisture,temperature)
-  - Close the feedback system based on given conditions*. 
-  - Record initial input conditions at the time of seeding. Act and maintain accordingly untill plant ready phase. 
-  - Develop database of several seed germination and sapling growth.
-  
-  Stage FaNcY !  
-  - Monitor and control acidity and properties of soil !!   ## What ?? is that even a parameter to control?? -- need research ! 
-  - Come up with a fancy casing/ design for this "Plant_Incubator".
-  
-  Stage OMG !
-  - Improvise Computer Vision for monitoring and control. 
-  - Scale up !! An xy axis hand for seeding multiple rows, watering !
-  
-  
+ Actuator Systems classification :: 
+
+  - Lighting system: Led strip with grow light module. (variable brightness) 
+  - Pump for irrigation system. 
+  - Heat mat control
+ 
+ Cloud based data for front end:: 
+
+  - Ambient Temperature display 
+  - Humidity % display + gauge
+  - Soil Moisture % display + gauge
+  - Soil Temperature display + gauge
+  - Overall, Bed avg and zonal brightness values + chart
+  - Light pump and mat on/off status!
+  - Overall plant status! 
+  - Time line notification since plant start! 
+  - Diagnosis chek : pi temp, mat, light and pump working duration chart!  
+
+ Data base for back end:: 
+
+  - All the above mentioned with timestamp. 
