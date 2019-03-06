@@ -1,10 +1,10 @@
 # Project_Plant
 
 Project Plant is an attempt to automate a Garden monitoring system. New to IoT, curious to see how far can this attempt go. With a vision 
-to completely monitor and control environmental conditions to trigger seed germination and assist sapling growth until the plant is ready 
+to completely monitor and control near ambient conditions to trigger seed germination and assist sapling growth until the plant is ready 
 to join the main garden. 
 
-I have decided try my hands on a very basic garden monitering and feedback system. But have included stages for as far and fancy as I could envision.    
+I have decided try my hands on a very basic garden monitering and control system. A system engineering approach using Simulink, arduino and Raspberry Pi. 
 
 Sensor Systems classification :: 
 
