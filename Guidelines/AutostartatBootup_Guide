@@ -1,0 +1,29 @@
+::Auto-run Script Setup::
+
+Now we need to tell the operating system to run the script for the Pi user. In the command prompt or in a terminal window type :
+
+$$ ---> sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
+
+
+Scroll to the bottom and add the following line :
+
+
+$$ --> 
+	@xset s off
+	@xset -dpms
+	@xset s noblock
+	@python3 /home/pi/Desktop/Plant_project/chktrigger.py
+
+
+where “/home/pi/Desktop/Plant_project/chktrigger.py” is the path to your script.
+
+Type “Ctrl+X” to exit, then “Y” to save followed by “Enter” twice.
+
+
+::To check process type in:: 
+
+$---> ps aux | grep chktrigger.py
+
+::To kill process::  
+
+$---> kill <PID>
