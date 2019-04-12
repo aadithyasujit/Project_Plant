@@ -1,0 +1,257 @@
+/********************************************************************/
+/************************Include Library*****************************/
+/********************************************************************/
+
+#include <OneWire.h>  //DS1820 libraries
+#include <DallasTemperature.h>  //DS1820 libraries
+#include "DHT.h"  //DHT11 libraries
+
+/********************************************************************/
+/*******************Define & Initialize setup************************/
+/********************************************************************/
+
+/*******************Sensor PINS SETUP********************/
+
+#define ONE_WIRE_BUS 2  // Signal Pin number of DS18B20 (Digital Pin) ----------------------->  (D2)
+OneWire oneWire(ONE_WIRE_BUS); // Setup a oneWire instance to communicate with any OneWire devices
+DallasTemperature sensors(&oneWire);  // Pass our oneWire reference to Dallas Temperature.
+
+#define DHTPIN 3     // what digital pin we're connected to   ----------------------->  (D3)
+#define DHTTYPE DHT22   // DHT 22
+DHT dht(DHTPIN, DHTTYPE); // Initialize DHT sensor.
+
+
+int moistPin = A2; // Pin number for Soil Sensor  ----------------------->  (A2)
+int sensorPin1 = A0; // Input pin for LDR 1       ----------------------->  (A0)
+int sensorPin2 = A1; // Input pin for LDR 2       ----------------------->  (A1)
+
+int moistVal = 0;
+int sensorValue1 = 0; // Variable storage for LDR 1
+int sensorValue2 = 0; // Variable storage for LDR 2
+int sensoravg = 0;  // Avg calculator storage
+
+/*******************Indicator PINS SETUP********************/
+
+#define LED 8    // Pin number of LED indicator  ----------------------->  (D8)
+
+
+/*******************RELAY PINS SETUP********************/
+
+#define Relay1 4    // Pin number of 220v TRIGGER  (S1)  ----------------------->  (D4)
+#define Relay2 5    // Pin number of 220v TRIGGER  (S2)  ----------------------->  (D5)
+#define Relay3 6    // Pin number of 220v TRIGGER  (S3)  ----------------------->  (D6)
+#define Relay4 7    // Pin number of 220v TRIGGER  (S4)  ----------------------->  (D7)
+
+
+
+/********************************************************************/
+/*******************Setup and Pin Mode definition********************/
+/********************************************************************/
+
+void setup()
+  {
+
+  Serial.begin(9600); //sets serial port for communication
+
+  sensors.begin(); // Boot DS18B20 library
+  dht.begin();    // Boot DHT11 library
+
+  pinMode(ONE_WIRE_BUS, INPUT_PULLUP);  // Set DS18B20 pin Mode
+  pinMode(LED, OUTPUT);                 // Set LED pin Mode
+  pinMode(Relay1, OUTPUT);              // Set relay pin Mode
+  pinMode(Relay2, OUTPUT);              // Set relay pin Mode
+  pinMode(Relay3, OUTPUT);              // Set relay pin Mode
+  pinMode(Relay4, OUTPUT);              // Set relay pin Mode
+  //delay(5000);                      // Wait a 5 seconds for Sensor startup.
+}
+
+
+
+/********************************************************************/
+/*******************Main Program Body *******************************/
+/********************************************************************/
+
+
+void loop() 
+{
+  int r = 0;
+
+    if (Serial.available()> 0)
+    { 
+          //char SerIn=Serial.read();
+          r = (Serial.read()-'0');
+          
+          if(r == 1)
+          {
+             resdisp();
+             //relaystatus();
+             r = 0;
+          }
+          
+          else if (r == 2)
+          {
+            //digitalWrite(Relay1, !digitalRead(Relay1));
+            digitalWrite(Relay1, LOW);
+            resdisp();
+            //r = 0;
+          }
+           else if (r == 3)
+          {
+            //digitalWrite(Relay1, !digitalRead(Relay1));
+            digitalWrite(Relay1, HIGH);
+            resdisp();
+            //r = 0;
+          }
+          else if (r == 4)
+          {
+            //digitalWrite(Relay2, !digitalRead(Relay2));
+            digitalWrite(Relay2, LOW);
+            resdisp();
+            //r = 0;
+          }
+          else if (r == 5)
+          {
+            //digitalWrite(Relay2, !digitalRead(Relay2));
+            digitalWrite(Relay2, HIGH);
+            resdisp();
+            //r = 0;
+          }
+          else if (r == 6)
+          {
+            //digitalWrite(Relay3, !digitalRead(Relay3));
+            digitalWrite(Relay1, LOW);
+            resdisp();
+            //r = 0;
+          }
+           else if (r == 7)
+          {
+            //digitalWrite(Relay3, !digitalRead(Relay3));
+            digitalWrite(Relay1, HIGH);
+            resdisp();
+            //r = 0;
+          }
+          else if (r == 8)
+          {
+            digitalWrite(Relay1, LOW);
+            digitalWrite(Relay2, LOW);
+            digitalWrite(Relay3, LOW);
+            digitalWrite(Relay4, LOW);
+            resdisp();
+            //r = 0;
+          }
+          else if (r == 9)
+          {
+            digitalWrite(Relay1, HIGH);
+            digitalWrite(Relay2, HIGH);
+            digitalWrite(Relay3, HIGH);
+            digitalWrite(Relay4, HIGH);
+            resdisp();
+            //r = 0;
+          }
+      }
+}
+
+/********************************************************************/
+/*******************Function Definition and Body ********************/
+/********************************************************************/
+
+void resdisp()
+{
+  //---------------------- Call Functions and rules --------------------
+          //String RD[4] = relaystatus();
+          //---------------------- DHT Temperature and humidity sensor -----------------
+        
+          // Reading temperature or humidity takes about 250 milliseconds!
+          // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+          float h = dht.readHumidity();
+          // Read temperature as Celsius (the default)
+          float t = dht.readTemperature();
+          // Read temperature as Fahrenheit (isFahrenheit = true)
+          // float f = dht.readTemperature(true);
+        
+          //---------------------- LDR Sensors -------------------------
+        
+          float Ba = analogRead(sensorPin1); // read the value from the sensor
+          float sensorValue1 = ((Ba * (100.0 / 1023.0)));
+          float Bb = analogRead(sensorPin2); // read the value from the sensor
+          float sensorValue2 = ((Bb * (100.0 / 1023.0)));
+          float sensoravg = (sensorValue1 + sensorValue2) / 2;
+          //Serial.print(sensorValue1); //prints the values coming from the sensor on the screen
+          //Serial.print(" & ");
+          //Serial.print(sensorValue2);
+          //Serial.print(" & ");
+        
+          //---------------------- Soil temperature sensor -----------------
+        
+          // call sensors.requestTemperatures() to issue a global temperature
+          // request to all devices on the bus
+          // Serial.print(" Requesting temperatures...");
+          sensors.requestTemperatures(); // Send the command to get temperature readings
+          // Serial.println("DONE");
+          // Serial.print("Temperature is: ");
+          // Serial.print(sensors.getTempCByIndex(0)); // Why "byIndex"?
+          // You can have more than one DS18B20 on the same bus.
+          // 0 refers to the first IC on the wire
+        
+          //---------------------- Soil moisture sensor --------------------
+        
+          float SM = analogRead(moistPin);
+          //Serial.println(moistVal);
+          float moistVal=(100.0 - (SM * (100.0 / 1023.0)));
+          //int percent = 2.718282 * 2.718282 * (.008985 * moistVal + 0.207762); // Display % of soil moisture based on high low values
+          //Serial.print(percent);
+          
+          //---------------------- Relay status --------------------
+          int R1 = digitalRead(Relay1);
+          int R2 = digitalRead(Relay2);
+          int R3 = digitalRead(Relay3);
+          int R4 = digitalRead(Relay4);
+          
+        //   Serial.println(R1);
+        //   Serial.println(R2);
+        //   Serial.println(R3);
+        //   Serial.println(R4);
+        //   Serial.println(states[0]);
+        //   Serial.println(states[1]);
+        //   Serial.println(states[2]);
+        //   Serial.println(states[3]);
+        //   Serial.println(RD[0]);
+        //   Serial.println(RD[1]);
+        //   Serial.println(RD[2]);
+        //   Serial.println(RD[3]);
+       
+            //Serial.print(F("  Humidity: "));
+            Serial.print(h);
+            Serial.print(",");
+            //Serial.print(F("%  Temperature: "));
+            Serial.print(t);
+            //Serial.print(F("°C "));
+            //Serial.print(F(" Brightness Out: "));
+            Serial.print(",");
+            Serial.print(sensorValue1);
+            Serial.print(",");
+            //Serial.print(F("  Brightness In: "));
+            //Serial.print(",");
+            Serial.print(sensorValue2);
+            Serial.print(",");
+            //Serial.print(F("  Average Brightness: "));
+            //Serial.print(",");
+            Serial.print(sensoravg);
+            Serial.print(",");
+            //Serial.print(F("  Soil Temperature: "));
+            //Serial.print(",");
+            Serial.print(sensors.getTempCByIndex(0));
+            Serial.print(",");
+            //Serial.print("Soil Moisture: ");
+            Serial.print(moistVal);
+            Serial.print(",");
+            Serial.print(R1);
+            Serial.print(",");
+            Serial.print(R2);
+            Serial.print(",");
+            Serial.print(R3);
+            Serial.print(",");
+            Serial.println(R4);
+            delay(5000);
+    // function to Sense and Output signals to Pi
+} 
